@@ -11,7 +11,7 @@
 
 #include "auth-api.h"
 
-#define MAXDATASIZE 256 // max number of bytes we can get at once
+#define MAXDATASIZE 4096
 
 // get sockaddr, IPv4 or IPv6:
 void *get_in_addr(struct sockaddr *sa) {
@@ -21,35 +21,39 @@ void *get_in_addr(struct sockaddr *sa) {
   return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-#define auth_api_send(format, ...)              \
-  {                                             \
-    char cmd[256] = {0};                          \
-    snprintf(cmd, 256, format "\n", __VA_ARGS__);        \
-    send(api->socket, cmd, strlen(cmd), 0);     \
-  }
+static char last_command_result[MAXDATASIZE] = {0};
+#define auth_api_send(format, ...)                                      \
+  ({                                                                    \
+    int err = 0;                                                        \
+    char cmd[MAXDATASIZE] = {0};                                        \
+    snprintf(cmd, 256, format "\n", __VA_ARGS__);                       \
+    send(api->socket, cmd, strlen(cmd), 0);                             \
+    int numbytes;                                                       \
+    memset(last_command_result, 0, MAXDATASIZE);                        \
+    if ((numbytes = recv(api->socket, last_command_result, MAXDATASIZE-1, 0)) == -1) { \
+      err = 1;                                                          \
+    }                                                                   \
+    err;                                                                \
+  })
+
+char *auth_api_last_result(auth_api_t *api) {
+  return last_command_result + 8;
+}
 
 int auth_api_success(auth_api_t *api) {
-  char buf[256] = {0};
-  int numbytes;
-  if ((numbytes = recv(api->socket, buf, 255, 0)) == -1) {
-    perror("recv");
-    return 0;
-  }
-  return 1;
+  return strncmp(last_command_result, "success", 7) == 0;
 }
 
 int auth_api_auth(auth_api_t *api, char const *username, char const *password) {
-  auth_api_send("AUTH : %s %s", username, password);
-  return 0;
+  return auth_api_send("AUTH : %s %s", username, password);
 }
 
 int auth_api_user_has_access_to(auth_api_t *api, char const *perm, char const *res) {
-  auth_api_send("USER HAS ACCESS TO : %s %s", perm, res);
-  return 0;
+  return auth_api_send("USER HAS ACCESS TO : %s %s", perm, res);
 }
 
 auth_api_t *auth_api_init(char const *host, short unsigned int port) {
-  int sockfd, numbytes;
+  int sockfd;
   struct addrinfo hints, *servinfo, *p;
   int rv;
   char s[INET6_ADDRSTRLEN];
