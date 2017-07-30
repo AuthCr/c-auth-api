@@ -49,7 +49,7 @@ int auth_api_auth(auth_api_t *api, char const *username, char const *password) {
 }
 
 int auth_api_user_has_access_to(auth_api_t *api, char const *perm, char const *res) {
-  return auth_api_send("USER HAS ACCESS TO : %s %s", perm, res);
+  return auth_api_send("USER HAS ACCESS TO : \\a %s %s", perm, res);
 }
 
 auth_api_t *auth_api_init(char const *host, short unsigned int port) {
