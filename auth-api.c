@@ -26,7 +26,7 @@ static char last_command_result[MAXDATASIZE] = {0};
   ({                                                                    \
     int err = 0;                                                        \
     char cmd[MAXDATASIZE] = {0};                                        \
-    snprintf(cmd, 256, format "\n", __VA_ARGS__);                       \
+    snprintf(cmd, 256, format "\n" , ##__VA_ARGS__);                       \
     send(api->socket, cmd, strlen(cmd), 0);                             \
     int numbytes;                                                       \
     memset(last_command_result, 0, MAXDATASIZE);                        \
@@ -36,20 +36,68 @@ static char last_command_result[MAXDATASIZE] = {0};
     err;                                                                \
   })
 
-char *auth_api_last_result(auth_api_t *api) {
+char *auth_api_last_result(auth_api_t const *api) {
   return last_command_result + 8;
 }
 
-int auth_api_success(auth_api_t *api) {
+int auth_api_success(auth_api_t const *api) {
   return strncmp(last_command_result, "success", 7) == 0;
 }
 
-int auth_api_auth(auth_api_t *api, char const *username, char const *password) {
+int auth_api_auth(auth_api_t const *api, char const *username, char const *password) {
   return auth_api_send("AUTH : %s %s", username, password);
 }
 
-int auth_api_user_has_access_to(auth_api_t *api, char const *perm, char const *res) {
+int auth_api_user_has_access_to(auth_api_t const *api, char const *perm, char const *res) {
   return auth_api_send("USER HAS ACCESS TO : \\a %s %s", perm, res);
+}
+
+int auth_api_group_add(auth_api_t const *api, char const *group, char const *perm, char const *resource) {
+  return auth_api_send("GROUP ADD : %s %s %s", group, perm, resource);
+}
+
+int auth_api_group_remove(auth_api_t const *api, char const *group) {
+  return auth_api_send("GROUP REMOVE : %s", group);
+}
+
+int auth_api_group_list(auth_api_t const *api) {
+  return auth_api_send("GROUP LIST");
+}
+
+int auth_api_group_list_perms(auth_api_t const *api, char const *group) {
+  return auth_api_send("GROUP LIST PERMS : %s", group);
+}
+
+int auth_api_group_get_perm(auth_api_t const *api, char const *group, char const *resource) {
+  return auth_api_send("GROUP GET PERM : %S %s", group, resource);
+}
+
+int auth_api_user_list(auth_api_t const *api) {
+  return auth_api_send("USER LIST");
+}
+
+int auth_api_user_add(auth_api_t const *api, char const *username, char const *password) {
+  return auth_api_send("USER ADD : %s %s", username, password);
+}
+
+int auth_api_user_remove(auth_api_t const *api, char const *username) {
+  return auth_api_send("USER REMOVE : %s", username);
+}
+
+int auth_api_user_add_group(auth_api_t const *api, char const *username, char const *group) {
+  return auth_api_send("USER ADD GROUP : %s %s", username, group);
+}
+
+int auth_api_user_remove_group(auth_api_t const *api, char const *username, char const *group) {
+  return auth_api_send("USER REMOVE GROUP : %s %s", username, group);
+}
+
+int auth_api_user_list_group(auth_api_t const *api, char const *username) {
+  return auth_api_send("USER LIST GROUP : %s", username);
+}
+
+int auth_api_user_change_password(auth_api_t const *api, char const *username, char const *newpassword) {
+  return auth_api_send("USER CHANGE PASSWORD : %s %s", username, newpassword);
 }
 
 auth_api_t *auth_api_init(char const *host, short unsigned int port) {
