@@ -124,7 +124,7 @@ auth_api_t *auth_api_init(char const *host, short unsigned int port) {
   }
 
   // loop through all the results and connect to the first we can
-  for(p = servinfo; p != NULL; p = p->ai_next) {
+  for (p = servinfo; p != NULL; p = p->ai_next) {
     if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
       perror("socket");
       continue;
