@@ -21,7 +21,9 @@ void *get_in_addr(struct sockaddr *sa) {
   return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
+// TODO: put the last command into auth_api_t (using a struct)
 static char last_command_result[MAXDATASIZE] = {0};
+
 #define auth_api_send(format, ...)                                      \
   ({                                                                    \
     int err = 0;                                                        \

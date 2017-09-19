@@ -28,6 +28,20 @@ int main() {
   }
   printf("Access auth\n");
 
+  printf("Try to list groups\n");
+  auth_api_group_list(api);
+  if (auth_api_success(api) == 0) {
+    printf("Don't have access\n");
+    auth_api_free(api);
+    return 4;
+  }
+
+  printf("Groups: %s\n", auth_api_last_result(api));
+  auth_api_group_list_perms(api, "root");
+  printf("Perms: %s\n", auth_api_last_result(api));
+  auth_api_group_list_perms(api, "user");
+  printf("Perms: %s\n", auth_api_last_result(api));
+
   printf("Everything worked fine !\n");
   auth_api_free(api);
   return 0;
