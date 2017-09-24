@@ -74,7 +74,7 @@ int auth_api_group_list_perms(auth_api_t *api, char const *group) {
 }
 
 int auth_api_group_get_perm(auth_api_t *api, char const *group, char const *resource) {
-  return auth_api_send("GROUP GET PERM : %S %s", group, resource);
+  return auth_api_send("GROUP GET PERM : %s %s", group, resource);
 }
 
 int auth_api_user_list(auth_api_t *api) {
@@ -116,7 +116,7 @@ auth_api_t *auth_api_init(char const *host, short unsigned int port) {
   hints.ai_socktype = SOCK_STREAM;
 
   char port_string[6] = {0};
-  snprintf(port_string, 5, "%i", port);
+  snprintf(port_string, 5, "%hui", port);
   printf("Connect to: %s:%s\n", host, port_string);
   if ((rv = getaddrinfo(host, port_string, &hints, &servinfo)) != 0) {
     perror("getaddrinfo");
@@ -149,7 +149,7 @@ auth_api_t *auth_api_init(char const *host, short unsigned int port) {
 
   freeaddrinfo(servinfo); // all done with this structure
 
-  auth_api_t *api = malloc(sizeof(auth_api_t));
+  auth_api_t *api = (auth_api_t *)malloc(sizeof(auth_api_t));
   if (api == NULL){
     close(sockfd);
     return NULL;
