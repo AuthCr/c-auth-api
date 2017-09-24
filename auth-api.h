@@ -40,5 +40,5 @@ int auth_api_user_add(auth_api_t *api, char const *username, char const *passwor
 int auth_api_user_remove(auth_api_t *api, char const *username);
 int auth_api_user_add_group(auth_api_t *api, char const *username, char const *group);
 int auth_api_user_remove_group(auth_api_t *api, char const *username, char const *group);
-int auth_api_user_list_group(auth_api_t *api, char const *username);
+int auth_api_user_list_groups(auth_api_t *api, char const *username);
 int auth_api_user_change_password(auth_api_t *api, char const *username, char const *newpassword);
