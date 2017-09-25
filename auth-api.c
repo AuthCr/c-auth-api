@@ -28,7 +28,7 @@ void *get_in_addr(struct sockaddr *sa) {
     int numbytes;                                                       \
     if (api->last_command_result != NULL)                               \
       free(api->last_command_result);                                   \
-    api->last_command_result = malloc(MAXDATASIZE);                     \
+    api->last_command_result = (char *)malloc(MAXDATASIZE);             \
     if (api->last_command_result != NULL) {                             \
       memset(api->last_command_result, 0, MAXDATASIZE);                 \
       if ((numbytes = recv(api->socket, api->last_command_result, MAXDATASIZE-1, 0)) == -1) { \
