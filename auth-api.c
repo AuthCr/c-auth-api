@@ -61,8 +61,8 @@ int auth_api_group_add(auth_api_t *api, char const *group, char const *perm, cha
   return auth_api_send("GROUP ADD : %s %s %s", group, perm, resource);
 }
 
-int auth_api_group_remove(auth_api_t *api, char const *group) {
-  return auth_api_send("GROUP REMOVE : %s", group);
+int auth_api_group_remove(auth_api_t *api, char const *group, char *resource) {
+  return auth_api_send("GROUP REMOVE : %s %s", group);
 }
 
 int auth_api_group_list(auth_api_t *api) {
