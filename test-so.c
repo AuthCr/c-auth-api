@@ -1,8 +1,10 @@
-#include "credid-api.h"
+#include "auth-api.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <dlfcn.h>
 
 int main() {
+  dlopen("libauth-api.so", RTLD_NOW | RTLD_GLOBAL);
   credid_api_t *api = credid_api_init("127.0.0.1", 8999);
   if (api == NULL) {
     printf("Cannot init\n");
@@ -27,20 +29,6 @@ int main() {
     return 3;
   }
   printf("Access auth\n");
-
-  printf("Try to list groups\n");
-  credid_api_group_list(api);
-  if (credid_api_success(api) == 0) {
-    printf("Don't have access\n");
-    credid_api_free(api);
-    return 4;
-  }
-
-  printf("Groups: %s\n", credid_api_last_result(api));
-  credid_api_group_list_perms(api, "root");
-  printf("Perms: %s\n", credid_api_last_result(api));
-  credid_api_group_list_perms(api, "user");
-  printf("Perms: %s\n", credid_api_last_result(api));
 
   printf("Everything worked fine !\n");
   credid_api_free(api);

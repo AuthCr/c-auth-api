@@ -9,7 +9,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include "auth-api.h"
+#include "credid-api.h"
 
 // get sockaddr, IPv4 or IPv6:
 void *get_in_addr(struct sockaddr *sa) {
@@ -19,7 +19,7 @@ void *get_in_addr(struct sockaddr *sa) {
   return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-#define auth_api_send(format, ...)                                      \
+#define credid_api_send(format, ...)                                      \
   ({                                                                    \
     int err = 0;                                                        \
     char cmd[MAXDATASIZE] = {0};                                        \
@@ -41,71 +41,71 @@ void *get_in_addr(struct sockaddr *sa) {
     err;                                                                \
   })
 
-char *auth_api_last_result(auth_api_t const *api) {
+char *credid_api_last_result(credid_api_t const *api) {
   return api->last_command_result + 8;
 }
 
-int auth_api_success(auth_api_t const *api) {
+int credid_api_success(credid_api_t const *api) {
   return strncmp(api->last_command_result, "success", 7) == 0;
 }
 
-int auth_api_auth(auth_api_t *api, char const *username, char const *password) {
-  return auth_api_send("AUTH : %s %s", username, password);
+int credid_api_auth(credid_api_t *api, char const *username, char const *password) {
+  return credid_api_send("AUTH : %s %s", username, password);
 }
 
-int auth_api_user_has_access_to(auth_api_t *api, char const *perm, char const *res) {
-  return auth_api_send("USER HAS ACCESS TO : \\a %s %s", perm, res);
+int credid_api_user_has_access_to(credid_api_t *api, char const *perm, char const *res) {
+  return credid_api_send("USER HAS ACCESS TO : \\a %s %s", perm, res);
 }
 
-int auth_api_group_add(auth_api_t *api, char const *group, char const *perm, char const *resource) {
-  return auth_api_send("GROUP ADD : %s %s %s", group, perm, resource);
+int credid_api_group_add(credid_api_t *api, char const *group, char const *perm, char const *resource) {
+  return credid_api_send("GROUP ADD : %s %s %s", group, perm, resource);
 }
 
-int auth_api_group_remove(auth_api_t *api, char const *group, char const *resource) {
-  return auth_api_send("GROUP REMOVE : %s %s", group, resource);
+int credid_api_group_remove(credid_api_t *api, char const *group, char const *resource) {
+  return credid_api_send("GROUP REMOVE : %s %s", group, resource);
 }
 
-int auth_api_group_list(auth_api_t *api) {
-  return auth_api_send("GROUP LIST");
+int credid_api_group_list(credid_api_t *api) {
+  return credid_api_send("GROUP LIST");
 }
 
-int auth_api_group_list_perms(auth_api_t *api, char const *group) {
-  return auth_api_send("GROUP LIST PERMS : %s", group);
+int credid_api_group_list_perms(credid_api_t *api, char const *group) {
+  return credid_api_send("GROUP LIST PERMS : %s", group);
 }
 
-int auth_api_group_get_perm(auth_api_t *api, char const *group, char const *resource) {
-  return auth_api_send("GROUP GET PERM : %s %s", group, resource);
+int credid_api_group_get_perm(credid_api_t *api, char const *group, char const *resource) {
+  return credid_api_send("GROUP GET PERM : %s %s", group, resource);
 }
 
-int auth_api_user_list(auth_api_t *api) {
-  return auth_api_send("USER LIST");
+int credid_api_user_list(credid_api_t *api) {
+  return credid_api_send("USER LIST");
 }
 
-int auth_api_user_add(auth_api_t *api, char const *username, char const *password) {
-  return auth_api_send("USER ADD : %s %s", username, password);
+int credid_api_user_add(credid_api_t *api, char const *username, char const *password) {
+  return credid_api_send("USER ADD : %s %s", username, password);
 }
 
-int auth_api_user_remove(auth_api_t *api, char const *username) {
-  return auth_api_send("USER REMOVE : %s", username);
+int credid_api_user_remove(credid_api_t *api, char const *username) {
+  return credid_api_send("USER REMOVE : %s", username);
 }
 
-int auth_api_user_add_group(auth_api_t *api, char const *username, char const *group) {
-  return auth_api_send("USER ADD GROUP : %s %s", username, group);
+int credid_api_user_add_group(credid_api_t *api, char const *username, char const *group) {
+  return credid_api_send("USER ADD GROUP : %s %s", username, group);
 }
 
-int auth_api_user_remove_group(auth_api_t *api, char const *username, char const *group) {
-  return auth_api_send("USER REMOVE GROUP : %s %s", username, group);
+int credid_api_user_remove_group(credid_api_t *api, char const *username, char const *group) {
+  return credid_api_send("USER REMOVE GROUP : %s %s", username, group);
 }
 
-int auth_api_user_list_groups(auth_api_t *api, char const *username) {
-  return auth_api_send("USER LIST GROUPS : %s", username);
+int credid_api_user_list_groups(credid_api_t *api, char const *username) {
+  return credid_api_send("USER LIST GROUPS : %s", username);
 }
 
-int auth_api_user_change_password(auth_api_t *api, char const *username, char const *newpassword) {
-  return auth_api_send("USER CHANGE PASSWORD : %s %s", username, newpassword);
+int credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword) {
+  return credid_api_send("USER CHANGE PASSWORD : %s %s", username, newpassword);
 }
 
-auth_api_t *auth_api_init(char const *host, short unsigned int port) {
+credid_api_t *credid_api_init(char const *host, short unsigned int port) {
   int sockfd;
   struct addrinfo hints, *servinfo, *p;
   int rv;
@@ -149,7 +149,7 @@ auth_api_t *auth_api_init(char const *host, short unsigned int port) {
 
   freeaddrinfo(servinfo); // all done with this structure
 
-  auth_api_t *api = (auth_api_t *)malloc(sizeof(auth_api_t));
+  credid_api_t *api = (credid_api_t *)malloc(sizeof(credid_api_t));
   if (api == NULL){
     close(sockfd);
     return NULL;
@@ -159,7 +159,7 @@ auth_api_t *auth_api_init(char const *host, short unsigned int port) {
   return api;
 }
 
-int auth_api_free(auth_api_t *api) {
+int credid_api_free(credid_api_t *api) {
   close(api->socket);
   if (api->last_command_result != NULL)
     free(api->last_command_result);
