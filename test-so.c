@@ -1,4 +1,4 @@
-#include "auth-api.h"
+#include "credid-api.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <dlfcn.h>

@@ -8,6 +8,7 @@ int main() {
     printf("Cannot init\n");
     return 1;
   }
+  credid_api_setup_logs(api, 1);
   printf("Init done\n");
 
   printf("Try to auth\n");
@@ -26,6 +27,18 @@ int main() {
     credid_api_free(api);
     return 3;
   }
+
+  credid_api_log_t *log = credid_api_fetch_log(api);
+  if (log == NULL) {
+    printf("no log found !\n");
+    return 4;
+  }
+  if (strcmp(log->query, "AUTH : root toor\n") != 0) {
+    printf("bad log found (%s) (%d)\n", log->query, log->success);
+    return 5;
+  }
+  free(log->query);
+  free(log);
   printf("Access auth\n");
 
   printf("Try to list groups\n");
@@ -33,7 +46,7 @@ int main() {
   if (credid_api_success(api) == 0) {
     printf("Don't have access\n");
     credid_api_free(api);
-    return 4;
+    return 6;
   }
 
   printf("Groups: %s\n", credid_api_last_result(api));
