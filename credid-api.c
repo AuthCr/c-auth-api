@@ -23,8 +23,8 @@ void *get_in_addr(struct sockaddr *sa) {
 #define credid_api_log(api, _query, _success)                           \
   ({                                                                    \
     if (api->logs_enabled == 1) {                                       \
-      credid_api_log_t *new_log = malloc(sizeof(credid_api_log_t));     \
-      credid_api_logs_link_t *new_link = malloc(sizeof(credid_api_logs_link_t)); \
+      credid_api_log_t *new_log = (credid_api_log_t*)malloc(sizeof(credid_api_log_t));     \
+      credid_api_logs_link_t *new_link = (credid_api_logs_link_t*)malloc(sizeof(credid_api_logs_link_t)); \
       new_log->query = strdup(_query);                                  \
       new_log->success = _success;                                      \
       new_link->line = new_log;                                         \
