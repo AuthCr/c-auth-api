@@ -1,6 +1,7 @@
 #include "credid-api.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int main() {
   credid_api_t *api = credid_api_init("127.0.0.1", 8999);
@@ -33,8 +34,8 @@ int main() {
     printf("no log found !\n");
     return 4;
   }
-  if (strcmp(log->query, "AUTH : root toor\n") != 0) {
-    printf("bad log found (%s) (%d)\n", log->query, log->success);
+  if (strcmp(log->query, "AUTH : root toor\n") != 0 || log->status != 0) {
+    printf("bad log found (%s) (%d)\n", log->query, log->status);
     return 5;
   }
   free(log->query);

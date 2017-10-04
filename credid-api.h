@@ -4,7 +4,7 @@
 
 typedef struct credid_api_log_s {
   char  *query;
-  int   success;
+  int   status;
 } credid_api_log_t ;
 
 typedef struct credid_api_logs_link_s {
