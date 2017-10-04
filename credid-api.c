@@ -19,13 +19,49 @@ void *get_in_addr(struct sockaddr *sa) {
   return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
+#define credid_api_obfuscate_password(query)            \
+  ({                                                    \
+    int len = strlen(query);                            \
+    int test = 1;                                       \
+    for (int i = 4; i < len; i++) {                     \
+      if (query[i] == ':')                              \
+        break;                                          \
+      if (query[i] != ' ')                              \
+        test = 0;                                       \
+    }                                                   \
+    if (strncmp("AUTH", query, 4) == 0 && test == 1) {  \
+      int position = 0;                                 \
+      for (int i = 4; i < len; i++) {                   \
+        if (position == 0) {                            \
+          if (query[i] == ':')                          \
+            position = 1;                               \
+        }                                               \
+        else if (position == 1) {                       \
+          if (query[i] != ' ')                          \
+            position = 2;                               \
+        }                                               \
+        else if (position == 2) {                       \
+          if (query[i] == ' ') {                        \
+            position = 3;                               \
+            query[i] = '\n';                            \
+          }                                             \
+        }                                               \
+        else if (position == 3) {                       \
+          query[i] = 0;                                 \
+        }                                               \
+      }                                                 \
+      printf("Safe query = %s\n", query);               \
+    }                                                   \
+  })
+
 // TODO: check malloc
 #define credid_api_log(api, _query, _status)                            \
   ({                                                                    \
     if (api->logs_enabled == 1) {                                       \
-      credid_api_log_t *new_log = (credid_api_log_t*)malloc(sizeof(credid_api_log_t));     \
+      credid_api_log_t *new_log = (credid_api_log_t*)malloc(sizeof(credid_api_log_t)); \
       credid_api_logs_link_t *new_link = (credid_api_logs_link_t*)malloc(sizeof(credid_api_logs_link_t)); \
       new_log->query = strdup(_query);                                  \
+      credid_api_obfuscate_password(new_log->query);                    \
       new_log->status = _status;                                        \
       new_link->line = new_log;                                         \
       new_link->next = NULL;                                            \

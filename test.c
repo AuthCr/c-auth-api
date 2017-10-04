@@ -34,7 +34,7 @@ int main() {
     printf("no log found !\n");
     return 4;
   }
-  if (strcmp(log->query, "AUTH : root toor\n") != 0 || log->status != 0) {
+  if (strcmp(log->query, "AUTH : root\n") != 0 || log->status != 0) {
     printf("bad log found (%s) (%d)\n", log->query, log->status);
     return 5;
   }
