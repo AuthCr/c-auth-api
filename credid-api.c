@@ -182,59 +182,59 @@ int credid_api_success(credid_api_t const *api) {
   return strncmp(api->last_command_result, "success", 7) == 0 ? 1 : 0;
 }
 
-int credid_api_auth(credid_api_t *api, char const *username, char const *password, int options, ...) {
+int _credid_api_auth(credid_api_t *api, char const *username, char const *password, int options, ...) {
   return credid_api_send(api, options, "AUTH : %s %s", username, password);
 }
 
-int credid_api_user_has_access_to(credid_api_t *api, char const *perm, char const *resource, int options, ...) {
+int _credid_api_user_has_access_to(credid_api_t *api, char const *perm, char const *resource, int options, ...) {
   return credid_api_send(api, options, "USER HAS ACCESS TO : \\a %s %s", perm, resource);
 }
 
-int credid_api_group_add(credid_api_t *api, char const *group, char const *perm, char const *resource, int options, ...) {
+int _credid_api_group_add(credid_api_t *api, char const *group, char const *perm, char const *resource, int options, ...) {
   return credid_api_send(api, options, "GROUP ADD : %s %s %s", group, perm, resource);
 }
 
-int credid_api_group_remove(credid_api_t *api, char const *group, char const *resource, int options, ...) {
+int _credid_api_group_remove(credid_api_t *api, char const *group, char const *resource, int options, ...) {
   return credid_api_send(api, options, "GROUP REMOVE : %s %s", group, resource);
 }
 
-int credid_api_group_list(credid_api_t *api, int options, ...) {
+int _credid_api_group_list(credid_api_t *api, int options, ...) {
   return credid_api_send(api, options, "GROUP LIST");
 }
 
-int credid_api_group_list_perms(credid_api_t *api, char const *group, int options, ...) {
+int _credid_api_group_list_perms(credid_api_t *api, char const *group, int options, ...) {
   return credid_api_send(api, options, "GROUP LIST PERMS : %s", group);
 }
 
-int credid_api_group_get_perm(credid_api_t *api, char const *group, char const *resource, int options, ...) {
+int _credid_api_group_get_perm(credid_api_t *api, char const *group, char const *resource, int options, ...) {
   return credid_api_send(api, options, "GROUP GET PERM : %s %s", group, resource);
 }
 
-int credid_api_user_list(credid_api_t *api, int options, ...) {
+int _credid_api_user_list(credid_api_t *api, int options, ...) {
   return credid_api_send(api, options, "USER LIST");
 }
 
-int credid_api_user_add(credid_api_t *api, char const *username, char const *password, int options, ...) {
+int _credid_api_user_add(credid_api_t *api, char const *username, char const *password, int options, ...) {
   return credid_api_send(api, options, "USER ADD : %s %s", username, password);
 }
 
-int credid_api_user_remove(credid_api_t *api, char const *username, int options, ...) {
+int _credid_api_user_remove(credid_api_t *api, char const *username, int options, ...) {
   return credid_api_send(api, options, "USER REMOVE : %s", username);
 }
 
-int credid_api_user_add_group(credid_api_t *api, char const *username, char const *group, int options, ...) {
+int _credid_api_user_add_group(credid_api_t *api, char const *username, char const *group, int options, ...) {
   return credid_api_send(api, options, "USER ADD GROUP : %s %s", username, group);
 }
 
-int credid_api_user_remove_group(credid_api_t *api, char const *username, char const *group, int options, ...) {
+int _credid_api_user_remove_group(credid_api_t *api, char const *username, char const *group, int options, ...) {
   return credid_api_send(api, options, "USER REMOVE GROUP : %s %s", username, group);
 }
 
-int credid_api_user_list_groups(credid_api_t *api, char const *username, int options, ...) {
+int _credid_api_user_list_groups(credid_api_t *api, char const *username, int options, ...) {
   return credid_api_send(api, options, "USER LIST GROUPS : %s", username);
 }
 
-int credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword, int options, ...) {
+int _credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword, int options, ...) {
   return credid_api_send(api, options, "USER CHANGE PASSWORD : %s %s", username, newpassword);
 }
 

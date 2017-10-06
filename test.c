@@ -13,7 +13,7 @@ int main() {
   printf("Init done\n");
 
   printf("Try to auth\n");
-  credid_api_auth(api, "root", "toor", 0);
+  credid_api_auth(api, "root", "toor");
   if (credid_api_success(api) == 0) {
     printf("Cannot auth\n");
     credid_api_free(api);
@@ -22,7 +22,7 @@ int main() {
   printf("Authenticated\n");
 
   printf("Try has access to\n");
-  credid_api_user_has_access_to(api, "write", "/test", 0);
+  credid_api_user_has_access_to(api, "write", "/test");
   if (credid_api_success(api) == 0) {
     printf("Don't have access\n");
     credid_api_free(api);
@@ -43,7 +43,7 @@ int main() {
   printf("Access auth\n");
 
   printf("Try to list groups\n");
-  credid_api_group_list(api, 0);
+  credid_api_group_list(api);
   if (credid_api_success(api) == 0) {
     printf("Don't have access\n");
     credid_api_free(api);
@@ -51,13 +51,13 @@ int main() {
   }
   printf("Groups: %s\n", credid_api_last_result(api));
 
-  credid_api_group_list(api, 2, "PAGE=1", "COUNT=1");
+  credid_api_group_list(api, "PAGE=1", "COUNT=1");
   printf("Groups page=1 count=1: %s\n", credid_api_last_result(api));
 
-  credid_api_group_list_perms(api, "root", 0);
+  credid_api_group_list_perms(api, "root");
   printf("Perms: %s\n", credid_api_last_result(api));
 
-  credid_api_group_list_perms(api, "user", 0);
+  credid_api_group_list_perms(api, "user");
   printf("Perms: %s\n", credid_api_last_result(api));
 
   printf("Everything worked fine !\n");

@@ -39,25 +39,39 @@ int credid_api_success(credid_api_t const *api);
  */
 char *credid_api_last_result(credid_api_t const *api);
 
+#define COUNT_VA_ARG(...)  sizeof((char*[]){0, ##__VA_ARGS__})/sizeof(char*)-1
+
 /* Send AUTH ids */
-int credid_api_auth(credid_api_t *api, char const *username, char const *password, int options, ...);
-
+int _credid_api_auth(credid_api_t *api,                 char const *username, char const *password,                 int options, ...);
 /* Request access to a resource */
-int credid_api_user_has_access_to(credid_api_t *api, char const *perm, char const *res, int options, ...);
+int _credid_api_user_has_access_to(credid_api_t *api,   char const *perm, char const *res,                          int options, ...);
+int _credid_api_group_add(credid_api_t *api,            char const *group, char const *perm, char const *resource,  int options, ...);
+int _credid_api_group_remove(credid_api_t *api,         char const *group, char const *resource,                    int options, ...);
+int _credid_api_group_list(credid_api_t *api,                                                                       int options, ...);
+int _credid_api_group_list_perms(credid_api_t *api,     char const *group,                                          int options, ...);
+int _credid_api_group_get_perm(credid_api_t *api,       char const *group, char const *resource,                    int options, ...);
+int _credid_api_user_list(credid_api_t *api,                                                                        int options, ...);
+int _credid_api_user_add(credid_api_t *api,             char const *username, char const *password,                 int options, ...);
+int _credid_api_user_remove(credid_api_t *api,          char const *username,                                       int options, ...);
+int _credid_api_user_add_group(credid_api_t *api,       char const *username, char const *group,                    int options, ...);
+int _credid_api_user_remove_group(credid_api_t *api,    char const *username, char const *group,                    int options, ...);
+int _credid_api_user_list_groups(credid_api_t *api,     char const *username,                                       int options, ...);
+int _credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword,              int options, ...);
 
-int credid_api_group_add(credid_api_t *api, char const *group, char const *perm, char const *resource, int options, ...);
-int credid_api_group_remove(credid_api_t *api, char const *group, char const *resource, int options, ...);
-int credid_api_group_list(credid_api_t *api, int options, ...);
-int credid_api_group_list_perms(credid_api_t *api, char const *group, int options, ...);
-int credid_api_group_get_perm(credid_api_t *api, char const *group, char const *resource, int options, ...);
-
-int credid_api_user_list(credid_api_t *api, int options, ...);
-int credid_api_user_add(credid_api_t *api, char const *username, char const *password, int options, ...);
-int credid_api_user_remove(credid_api_t *api, char const *username, int options, ...);
-int credid_api_user_add_group(credid_api_t *api, char const *username, char const *group, int options, ...);
-int credid_api_user_remove_group(credid_api_t *api, char const *username, char const *group, int options, ...);
-int credid_api_user_list_groups(credid_api_t *api, char const *username, int options, ...);
-int credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword, int options, ...);
+#define credid_api_auth(api, username, password, ...)                    _credid_api_auth(api, username, password,                     COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_user_has_access_to(api, perm, res, ...)               _credid_api_user_has_access_to(api, perm, res,                COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_group_add(api, group, perm, resource, ...)            _credid_api_group_add(api, group, perm, resource,             COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_group_remove(api, group, resource, ...)               _credid_api_group_remove(api, group, resource,                COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_group_list(api, ...)                                  _credid_api_group_list(api,                                   COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_group_list_perms(api, group, ...)                     _credid_api_group_list_perms(api, group,                      COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_group_get_perm(api, group, resource, ...)             _credid_api_group_get_perm(api, group, resource,              COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_user_list(api, ...)                                   _credid_api_user_list(api,                                    COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_user_add(api, username, password, ...)                _credid_api_user_add(api, username, password,                 COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_user_remove(api, username, ...)                       _credid_api_user_remove(api, username,                        COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_user_add_group(api, username, group, ...)             _credid_api_user_add_group(api, username, group,              COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_user_remove_group(api, username, group, ...)          _credid_api_user_remove_group(api, username, group,           COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_user_list_groups(api, username, ...)                  _credid_api_user_list_groups(api, username,                   COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_user_change_password(api, username, newpassword, ...) _credid_api_user_change_password(api, username, newpassword,  COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
 
 /* Enable or disable the logging (1 or 0) */
 int credid_api_setup_logs(credid_api_t *api, int enable);
