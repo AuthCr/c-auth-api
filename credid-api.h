@@ -44,7 +44,7 @@ char *credid_api_last_result(credid_api_t const *api);
 /* Send AUTH ids */
 int _credid_api_auth(credid_api_t *api,                 char const *username, char const *password,                 int options, ...);
 /* Request access to a resource */
-int _credid_api_user_has_access_to(credid_api_t *api,   char const *perm, char const *res,                          int options, ...);
+int _credid_api_user_has_access_to(credid_api_t *api,   char const *username, char const *perm, char const *res,    int options, ...);
 int _credid_api_group_add(credid_api_t *api,            char const *group, char const *perm, char const *resource,  int options, ...);
 int _credid_api_group_remove(credid_api_t *api,         char const *group, char const *resource,                    int options, ...);
 int _credid_api_group_list(credid_api_t *api,                                                                       int options, ...);
@@ -59,7 +59,7 @@ int _credid_api_user_list_groups(credid_api_t *api,     char const *username,   
 int _credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword,              int options, ...);
 
 #define credid_api_auth(api, username, password, ...)                    _credid_api_auth(api, username, password,                     COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
-#define credid_api_user_has_access_to(api, perm, res, ...)               _credid_api_user_has_access_to(api, perm, res,                COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
+#define credid_api_user_has_access_to(api, username, perm, res, ...)     _credid_api_user_has_access_to(api, username, perm, res,      COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
 #define credid_api_group_add(api, group, perm, resource, ...)            _credid_api_group_add(api, group, perm, resource,             COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
 #define credid_api_group_remove(api, group, resource, ...)               _credid_api_group_remove(api, group, resource,                COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)
 #define credid_api_group_list(api, ...)                                  _credid_api_group_list(api,                                   COUNT_VA_ARG(__VA_ARGS__), ##__VA_ARGS__)

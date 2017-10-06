@@ -22,7 +22,7 @@ int main() {
   printf("Authenticated\n");
 
   printf("Try has access to\n");
-  credid_api_user_has_access_to(api, "write", "/test");
+  credid_api_user_has_access_to(api, "root", "write", "/test");
   if (credid_api_success(api) == 0) {
     printf("Don't have access\n");
     credid_api_free(api);

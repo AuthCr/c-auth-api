@@ -186,8 +186,8 @@ int _credid_api_auth(credid_api_t *api, char const *username, char const *passwo
   return credid_api_send(api, options, "AUTH : %s %s", username, password);
 }
 
-int _credid_api_user_has_access_to(credid_api_t *api, char const *perm, char const *resource, int options, ...) {
-  return credid_api_send(api, options, "USER HAS ACCESS TO : \\a %s %s", perm, resource);
+int _credid_api_user_has_access_to(credid_api_t *api, char const *username, char const *perm, char const *resource, int options, ...) {
+  return credid_api_send(api, options, "USER HAS ACCESS TO : %s %s %s", username, perm, resource);
 }
 
 int _credid_api_group_add(credid_api_t *api, char const *group, char const *perm, char const *resource, int options, ...) {
