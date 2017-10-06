@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <stdarg.h>
 
 #include "credid-api.h"
 
@@ -74,11 +75,20 @@ void *get_in_addr(struct sockaddr *sa) {
   })
 
 // TODO: check recv, snprintf
-#define credid_api_send(api, format, ...)                               \
+#define credid_api_send(api, options, format, ...)                      \
   ({                                                                    \
     int err = 0;                                                        \
     char cmd[MAXDATASIZE] = {0};                                        \
-    snprintf(cmd, 256, format "\n" , ##__VA_ARGS__);                    \
+    char cmd_tmp[MAXDATASIZE] = {0};                                    \
+    snprintf(cmd, MAXDATASIZE-1, format "\n" , ##__VA_ARGS__);          \
+    va_list varglist;                                                   \
+    va_start(varglist, options);                                        \
+    for (int i = 0; i < options; i++) {                                 \
+      char *option = va_arg(varglist, char*);                           \
+      snprintf(cmd_tmp, MAXDATASIZE-1, "%s %s", option, cmd);           \
+      strncpy(cmd, cmd_tmp, MAXDATASIZE);                               \
+    }                                                                   \
+    va_end(varglist);                                                   \
     send(api->socket, cmd, strlen(cmd), 0);                             \
     int numbytes;                                                       \
     if (api->last_command_result != NULL)                               \
@@ -97,69 +107,6 @@ void *get_in_addr(struct sockaddr *sa) {
     err;                                                                \
   })
 
-char *credid_api_last_result(credid_api_t const *api) {
-  return api->last_command_result + 8;
-}
-
-int credid_api_success(credid_api_t const *api) {
-  return strncmp(api->last_command_result, "success", 7) == 0 ? 1 : 0;
-}
-
-int credid_api_auth(credid_api_t *api, char const *username, char const *password) {
-  return credid_api_send(api, "AUTH : %s %s", username, password);
-}
-
-int credid_api_user_has_access_to(credid_api_t *api, char const *perm, char const *res) {
-  return credid_api_send(api, "USER HAS ACCESS TO : \\a %s %s", perm, res);
-}
-
-int credid_api_group_add(credid_api_t *api, char const *group, char const *perm, char const *resource) {
-  return credid_api_send(api, "GROUP ADD : %s %s %s", group, perm, resource);
-}
-
-int credid_api_group_remove(credid_api_t *api, char const *group, char const *resource) {
-  return credid_api_send(api, "GROUP REMOVE : %s %s", group, resource);
-}
-
-int credid_api_group_list(credid_api_t *api) {
-  return credid_api_send(api, "GROUP LIST");
-}
-
-int credid_api_group_list_perms(credid_api_t *api, char const *group) {
-  return credid_api_send(api, "GROUP LIST PERMS : %s", group);
-}
-
-int credid_api_group_get_perm(credid_api_t *api, char const *group, char const *resource) {
-  return credid_api_send(api, "GROUP GET PERM : %s %s", group, resource);
-}
-
-int credid_api_user_list(credid_api_t *api) {
-  return credid_api_send(api, "USER LIST");
-}
-
-int credid_api_user_add(credid_api_t *api, char const *username, char const *password) {
-  return credid_api_send(api, "USER ADD : %s %s", username, password);
-}
-
-int credid_api_user_remove(credid_api_t *api, char const *username) {
-  return credid_api_send(api, "USER REMOVE : %s", username);
-}
-
-int credid_api_user_add_group(credid_api_t *api, char const *username, char const *group) {
-  return credid_api_send(api, "USER ADD GROUP : %s %s", username, group);
-}
-
-int credid_api_user_remove_group(credid_api_t *api, char const *username, char const *group) {
-  return credid_api_send(api, "USER REMOVE GROUP : %s %s", username, group);
-}
-
-int credid_api_user_list_groups(credid_api_t *api, char const *username) {
-  return credid_api_send(api, "USER LIST GROUPS : %s", username);
-}
-
-int credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword) {
-  return credid_api_send(api, "USER CHANGE PASSWORD : %s %s", username, newpassword);
-}
 
 credid_api_t *credid_api_init(char const *host, short unsigned int port) {
   int sockfd;
@@ -225,6 +172,70 @@ int credid_api_free(credid_api_t *api) {
   credid_api_free_logs(api);
   free(api);
   return 0;
+}
+
+char *credid_api_last_result(credid_api_t const *api) {
+  return api->last_command_result + 8;
+}
+
+int credid_api_success(credid_api_t const *api) {
+  return strncmp(api->last_command_result, "success", 7) == 0 ? 1 : 0;
+}
+
+int credid_api_auth(credid_api_t *api, char const *username, char const *password, int options, ...) {
+  return credid_api_send(api, options, "AUTH : %s %s", username, password);
+}
+
+int credid_api_user_has_access_to(credid_api_t *api, char const *perm, char const *resource, int options, ...) {
+  return credid_api_send(api, options, "USER HAS ACCESS TO : \\a %s %s", perm, resource);
+}
+
+int credid_api_group_add(credid_api_t *api, char const *group, char const *perm, char const *resource, int options, ...) {
+  return credid_api_send(api, options, "GROUP ADD : %s %s %s", group, perm, resource);
+}
+
+int credid_api_group_remove(credid_api_t *api, char const *group, char const *resource, int options, ...) {
+  return credid_api_send(api, options, "GROUP REMOVE : %s %s", group, resource);
+}
+
+int credid_api_group_list(credid_api_t *api, int options, ...) {
+  return credid_api_send(api, options, "GROUP LIST");
+}
+
+int credid_api_group_list_perms(credid_api_t *api, char const *group, int options, ...) {
+  return credid_api_send(api, options, "GROUP LIST PERMS : %s", group);
+}
+
+int credid_api_group_get_perm(credid_api_t *api, char const *group, char const *resource, int options, ...) {
+  return credid_api_send(api, options, "GROUP GET PERM : %s %s", group, resource);
+}
+
+int credid_api_user_list(credid_api_t *api, int options, ...) {
+  return credid_api_send(api, options, "USER LIST");
+}
+
+int credid_api_user_add(credid_api_t *api, char const *username, char const *password, int options, ...) {
+  return credid_api_send(api, options, "USER ADD : %s %s", username, password);
+}
+
+int credid_api_user_remove(credid_api_t *api, char const *username, int options, ...) {
+  return credid_api_send(api, options, "USER REMOVE : %s", username);
+}
+
+int credid_api_user_add_group(credid_api_t *api, char const *username, char const *group, int options, ...) {
+  return credid_api_send(api, options, "USER ADD GROUP : %s %s", username, group);
+}
+
+int credid_api_user_remove_group(credid_api_t *api, char const *username, char const *group, int options, ...) {
+  return credid_api_send(api, options, "USER REMOVE GROUP : %s %s", username, group);
+}
+
+int credid_api_user_list_groups(credid_api_t *api, char const *username, int options, ...) {
+  return credid_api_send(api, options, "USER LIST GROUPS : %s", username);
+}
+
+int credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword, int options, ...) {
+  return credid_api_send(api, options, "USER CHANGE PASSWORD : %s %s", username, newpassword);
 }
 
 int credid_api_setup_logs(credid_api_t *api, int enable) {

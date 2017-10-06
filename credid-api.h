@@ -40,29 +40,30 @@ int credid_api_success(credid_api_t const *api);
 char *credid_api_last_result(credid_api_t const *api);
 
 /* Send AUTH ids */
-int credid_api_auth(credid_api_t *api, char const *username, char const *password);
+int credid_api_auth(credid_api_t *api, char const *username, char const *password, int options, ...);
 
 /* Request access to a resource */
-int credid_api_user_has_access_to(credid_api_t *api, char const *perm, char const *res);
+int credid_api_user_has_access_to(credid_api_t *api, char const *perm, char const *res, int options, ...);
 
-int credid_api_group_add(credid_api_t *api, char const *group, char const *perm, char const *resource);
-int credid_api_group_remove(credid_api_t *api, char const *group, char const *resource);
-int credid_api_group_list(credid_api_t *api);
-int credid_api_group_list_perms(credid_api_t *api, char const *group);
-int credid_api_group_get_perm(credid_api_t *api, char const *group, char const *resource);
+int credid_api_group_add(credid_api_t *api, char const *group, char const *perm, char const *resource, int options, ...);
+int credid_api_group_remove(credid_api_t *api, char const *group, char const *resource, int options, ...);
+int credid_api_group_list(credid_api_t *api, int options, ...);
+int credid_api_group_list_perms(credid_api_t *api, char const *group, int options, ...);
+int credid_api_group_get_perm(credid_api_t *api, char const *group, char const *resource, int options, ...);
 
-int credid_api_user_list(credid_api_t *api);
-int credid_api_user_add(credid_api_t *api, char const *username, char const *password);
-int credid_api_user_remove(credid_api_t *api, char const *username);
-int credid_api_user_add_group(credid_api_t *api, char const *username, char const *group);
-int credid_api_user_remove_group(credid_api_t *api, char const *username, char const *group);
-int credid_api_user_list_groups(credid_api_t *api, char const *username);
-int credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword);
+int credid_api_user_list(credid_api_t *api, int options, ...);
+int credid_api_user_add(credid_api_t *api, char const *username, char const *password, int options, ...);
+int credid_api_user_remove(credid_api_t *api, char const *username, int options, ...);
+int credid_api_user_add_group(credid_api_t *api, char const *username, char const *group, int options, ...);
+int credid_api_user_remove_group(credid_api_t *api, char const *username, char const *group, int options, ...);
+int credid_api_user_list_groups(credid_api_t *api, char const *username, int options, ...);
+int credid_api_user_change_password(credid_api_t *api, char const *username, char const *newpassword, int options, ...);
 
 /* Enable or disable the logging (1 or 0) */
 int credid_api_setup_logs(credid_api_t *api, int enable);
 
-/* Return the first log of the logs (and remove it from the logs).
+/*
+ * Return the first log of the logs (and remove it from the logs).
  * The returned pointer must be freed with free().
  */
 credid_api_log_t *credid_api_fetch_log(credid_api_t *api);

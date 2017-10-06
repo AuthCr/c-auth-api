@@ -19,7 +19,7 @@ You can create a new api entry-point with:
 
 Then you have to authenticate the connection:
 
-    creid_api_auth(api, "root", "toor");
+    creid_api_auth(api, "root", "toor", 0);
 
 You can verify the result of the last command with (0 = failure, 1 = success):
 
@@ -27,10 +27,14 @@ You can verify the result of the last command with (0 = failure, 1 = success):
 
 You can check if you have access to a resource with:
 
-    credid_api_user_has_access_to(api, "write", "/test");
+    credid_api_user_has_access_to(api, "write", "/test", 0);
     if (credid_api_success(api) == 1) {
       printf("Success\n");
     }
+
+You can specity query's options by specifing the amount of options and then their key and value:
+
+    credid_api_group_list(api, 2, "PAGE=1", "COUNT=1");
 
 ## More features
 
