@@ -32,7 +32,7 @@ You can check if you have access to a resource with:
       printf("Success\n");
     }
 
-You can specity query's options by specifing them:
+You can define query's options by specifing them as optional arguments:
 
     credid_api_group_list(api, "PAGE=1", "COUNT=1");
 
