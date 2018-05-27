@@ -2,12 +2,11 @@
 
 ## Build
 
-    cmake CMakeLists.txt
     make
 
 ## Install
 
-You can copy `libcredid.so` into you lib path (`/usr/lib`) and `auth-api.h` into your include dir (`/usr/include`).
+    make install
 
 ## Usage
 
