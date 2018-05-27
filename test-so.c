@@ -1,10 +1,10 @@
-#include "credid-api.h"
+#include "credid.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <dlfcn.h>
 
 int main() {
-  dlopen("libauth-api.so", RTLD_NOW | RTLD_GLOBAL);
+  dlopen("libcredid.so", RTLD_NOW | RTLD_GLOBAL);
   credid_api_t *api = credid_api_init("127.0.0.1", 8999);
   if (api == NULL) {
     printf("Cannot init\n");
@@ -22,7 +22,7 @@ int main() {
   printf("Authenticated\n");
 
   printf("Try has access to\n");
-  credid_api_user_has_access_to(api, "write", "/test");
+  credid_api_user_has_access_to(api, "root", "write", "/test");
   if (credid_api_success(api) == 0) {
     printf("Don't have access\n");
     credid_api_free(api);

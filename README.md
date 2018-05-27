@@ -7,7 +7,7 @@
 
 ## Install
 
-You can copy `libcredid-api.so` into you lib path (`/usr/lib`) and `auth-api.h` into your include dir (`/usr/include`).
+You can copy `libcredid.so` into you lib path (`/usr/lib`) and `auth-api.h` into your include dir (`/usr/include`).
 
 ## Usage
 
@@ -47,7 +47,7 @@ The api provide a implementation of the full credid RFC v0.2.
 
 And also
 
-* Logs (see the header file `credid-api.h`)
+* Logs (see the header file `credid.h`)
 
 ## Security
 

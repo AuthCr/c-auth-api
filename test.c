@@ -1,4 +1,4 @@
-#include "credid-api.h"
+#include "credid.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

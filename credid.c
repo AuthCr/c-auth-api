@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 #include <stdarg.h>
 
-#include "credid-api.h"
+#include "credid.h"
 
 // get sockaddr, IPv4 or IPv6:
 void *get_in_addr(struct sockaddr *sa) {
