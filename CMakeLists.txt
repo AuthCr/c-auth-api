@@ -7,3 +7,15 @@ file(GLOB SOURCES credid.c)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_library(credid SHARED credid.c)
+
+install(FILES
+    credid.h
+  DESTINATION
+    include
+)
+
+install(TARGETS credid
+  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  INCLUDES DESTINATION include)
